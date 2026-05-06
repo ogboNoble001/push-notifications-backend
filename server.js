@@ -1,4 +1,5 @@
 require('dotenv').config();
+const cors = require('cors');
 const express  = require('express');
 const webPush  = require('web-push');
 const path     = require('path');
@@ -21,6 +22,7 @@ if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
 }
 
 /* ─── MIDDLEWARE ──────────────────────────────────────────── */
+app.use(cors({ origin: process.env.FRONTEND_URL || '*', methods: ['GET', 'POST', 'OPTIONS'], allowedHeaders: ['Content-Type'] }));
 app.use(express.json());
 
 /* Serve all PWA static files from the same directory */
