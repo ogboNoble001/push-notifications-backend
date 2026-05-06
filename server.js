@@ -27,15 +27,17 @@ app.use(express.json());
 
 
 
-/* ─── VAPID KEY GENERATOR (temp route — delete after use) ── */
-app.get('/generate-vapid', (req, res) => {
-  const keys = webPush.generateVAPIDKeys();
-  res.json({
-    note: 'Copy these into your Render env vars, then delete this route!',
-    VAPID_PUBLIC_KEY:  keys.publicKey,
-    VAPID_PRIVATE_KEY: keys.privateKey,
+/* ─── VAPID KEY GENERATOR (Only for local use) ───────────── */
+if (process.env.NODE_ENV !== 'production') {
+  app.get('/generate-vapid', (req, res) => {
+    const keys = webPush.generateVAPIDKeys();
+    res.json({
+      note: 'Copy these into your Render env vars, then delete this route!',
+      VAPID_PUBLIC_KEY:  keys.publicKey,
+      VAPID_PRIVATE_KEY: keys.privateKey,
+    });
   });
-});
+}
 
 /* ─── PUSH ROUTES ─────────────────────────────────────────── */
 app.post('/api/push/subscribe', (req, res) => {
