@@ -25,15 +25,7 @@ if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
 app.use(cors({ origin: process.env.FRONTEND_URL || '*', methods: ['GET', 'POST', 'OPTIONS'], allowedHeaders: ['Content-Type'] }));
 app.use(express.json());
 
-/* Serve all PWA static files from the same directory */
-app.use(express.static(path.join(__dirname), {
-  setHeaders(res, filePath) {
-    if (filePath.endsWith('sw.js')) {
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.setHeader('Service-Worker-Allowed', '/');
-    }
-  }
-}));
+
 
 /* ─── VAPID KEY GENERATOR (temp route — delete after use) ── */
 app.get('/generate-vapid', (req, res) => {
@@ -73,9 +65,6 @@ app.post('/api/push/send', async (req, res) => {
 });
 
 /* ─── FALLBACK — SPA ─────────────────────────────────────── */
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
 
 /* ─── START ──────────────────────────────────────────────── */
 app.listen(PORT, () => {
